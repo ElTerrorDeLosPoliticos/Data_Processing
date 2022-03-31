@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "elterrordelospoliticos",
+  "private_key_id": "ab87edd1ad3b2b01ebc8fdcbccdfd3735eeeb34b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCmnG/RNGH2MSW3\nl4nC1ZRw0zoN2NUcwPYa7FUhkLSSwxLWLGc1WgTNYaHTkyd8cl41d6dOaBjwxcrF\naQ8tR221AwJPvq1qBYXHd8JyjmBuQEWSiDRzkJPhXUWMK6PEqGbX2qV7XZhXkc14\nMVPfi9/v06TVF8ygoZ6/eSnPY0PblogDj6YXSG1sIA5NL/rR1iOaF7ROd8HStZYF\nPX/6lR32pig+f7cbkNkWpNd9vs97MRD45ikMGvzCJlioS59l7podijnllmBfV3WI\nd4tV0g8kSdSuGLO86xsvsnVD2aiTql6ya+yvMIsY86WBu3yae0Cjg/rFSdmMpSFg\nhZM3oi61AgMBAAECggEACC9MMO9NVq5QZ4X6vwcF/UrrIa4CviBelrEAd58nt8P8\ng2f4A/9xl/NRY1bpzCvEJAVGQ0xK2V0mGm+QTs2g/pDwxqEb3Mb7rPJdq4oCA7iF\nkm69gOXb1ejil0G3kFwjfTwg///3kWm4ucxWjfdNn3b6tHswUr3N0iMuIiGCvmFA\nzq8glbN0AcKThoEbQltWcZUwL1pY2dWTuluu8s1aS3QsjtUq3vgQn/Gqa3XkwnEo\ng9j+iiAitElrGL3x8KeL+Do7O+bQ6KSfWIxITuCuX2AR2k5aHSDLDtkSAzlVmDKf\n6rjhRrYwHpQarz0hSaY7vcczOyQYX/ogl+NKJvbLYQKBgQDnKOr7E1azcFhpXPzS\nZqLFQmaT8drCU7XOoUaHPunpc7wkkfzT485Q17kZHddbOncKnRebv4z16CSZKqT1\nxnwGWfnpUX4nV09eTUIm1O3FInYTV9MVVLSmdxxa6nLH+vVpcGAHxA9ZaNX2KpFo\njWUV6Ldq4F0GDd3s79GSCptsUQKBgQC4g9FLaWcnf8TWqzWucel5iwxjjI78stlU\nBMqyZx6xkJffu3tlnL/mlxSV7lTFNm+aDt/5jL/lgEOOasNGD8OiImjgzxdSzDGZ\nQ+fB14ZSWg3c5iONgvog8LbLfHr4K5gf4/TBXibQOHeYkmDcxAKdY9qELafijsK0\n5XDuHJxXJQKBgQClhr5lFd8C1RLqN+TugQJTgI3VqN0+RBUvJntLg3iaa/6wrT0/\nOaRWbXMlEiJROFdf6UerhonY2OfEKi4/tGbBYZK8SVetsi6qV2ZkShsNC/VDOqNz\nZdmKTkamr7WLkCBF5WtOhE19d72m7ap8FKvq+V7GEG1sVWeyL7SBAEl1UQKBgD3X\nSDVbLUyKwSElnsdJvHOVC+DtghrlontLY9gpQZtHl+9PecsTnymcpzSc/WJfnUXo\nCF8uMj6sH3hDBhGcRPg5SidWoT2J3HG+1ZUdNBKzxgOsSmwqYsTZiJporRoyGjlO\nAIEymhWdZ1AGd1pmg23Wwq0cVDFVoaJZZ+EWS7vVAoGBANcWh+tHFhi7anwj3zGe\nagRhij7rGLx/mcmczNcKj4BaCpSwuAeV1s36UxCnkOxCuqUZx6qW2eg4sqi38QmY\nobrLcqKFelmsb0O5Pr0ZJQPfPFlH5BR7635CNf6ifesLH3ddwGKnRdMX10mvLe50\nCeLrsIT4bEn79KmosvqwMMao\n-----END PRIVATE KEY-----\n",
+  "client_email": "sebas-firestore@elterrordelospoliticos.iam.gserviceaccount.com",
+  "client_id": "108496855121019199321",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sebas-firestore%40elterrordelospoliticos.iam.gserviceaccount.com"
+}
