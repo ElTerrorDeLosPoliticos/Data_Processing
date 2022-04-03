@@ -60,10 +60,17 @@ python3 6_visitas_diarias_mins_transformacion.py
 # Esta parte demora más
 if [[ -f "rucs_proveedores_2021_2022.json" ]];
 then
-    echo "El archivo .json con proveedores existe"
+echo "El archivo .json con proveedores existe"
 else
-    echo "7/9"
-    python3 7_proveedores_load.py
+echo "Se necesita tener un .json con todas las empresas a buscar"
+fi
+
+if [[ -f "./proveedores/proveedores_load.txt" ]];
+then
+echo "proveedores_load.txt existe, no es necesario recargarlo"
+else
+echo "7/9"
+python3 7_proveedores_load.py
 fi
 # Transformamos la info de proveedores para que nos sea más util
 echo "8/9"

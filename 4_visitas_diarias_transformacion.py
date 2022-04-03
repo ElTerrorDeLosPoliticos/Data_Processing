@@ -16,7 +16,9 @@ def obtener_df_de_firestore():
     onlyfiles = obtener_files()
     df_firestore = pd.DataFrame()
     for i in tqdm(onlyfiles):
-        df_firestore = pd.concat([df_firestore, pd.read_csv(os.getcwd() + '/visitas_mensuales/' + i, low_memory = False)])
+        mensual_df = pd.read_csv(os.getcwd() + '/visitas_mensuales/' + i, low_memory = False)
+        if len(mensual_df) > 0:
+            df_firestore = pd.concat([df_firestore, mensual_df])
     df_firestore.drop(['Unnamed: 0'], axis = 1, inplace= True)
     df_firestore.dropna(subset=['Visitante'], inplace= True)
     df_firestore.index = list(range(len(df_firestore)))
@@ -25,7 +27,7 @@ def obtener_df_de_firestore():
 def obtener_files():
     directorio = os.getcwd()
     directorio_files = directorio + '/visitas_mensuales'
-    onlyfiles = [f for f in listdir(directorio_files) if isfile(join(directorio_files, f))]
+    onlyfiles = [f for f in listdir(directorio_files) if (isfile(join(directorio_files, f))) and (f[-4:] == ".csv" ) ]
     return onlyfiles
 
 def obtain_date(fecha):
