@@ -14,7 +14,7 @@ def load_csv():
     visitas = visitas.rename(columns= {'id': 'id_visitas'})
     visitas_ministerios = pd.read_csv(os.getcwd() + '/visitas_ministerios_transform/visitantes_transformed.csv')
     visitas_ministerios = visitas_ministerios.rename(columns={'id':'id_visitas_min'})
-    proveedores = pd.read_csv(os.getcwd() + '/proveedores/proveedores_transform.csv')
+    proveedores = pd.read_csv(os.getcwd() + '/proveedores/proveedores.csv')
     proveedores = proveedores.rename(columns={'id':'id_proveedores'})
     return planilla, visitas, visitas_ministerios, proveedores
 
@@ -30,9 +30,9 @@ def obtain_dnis(string):
 def get_dni_list_len_one(lista):
     if (not isinstance(lista, str)) and list is not None and len(lista) != 0:
         #print(lista)
-        return lista[0] 
+        return str(lista[0]) 
     else:
-        return lista
+        return str(lista)
 
 def dnis_more_rows(visitas_c):
     visitas = visitas_c.copy()
@@ -77,7 +77,7 @@ def encontrados_visitantes(proveedores, new_visitas):
         #print(dnis)
         if len(dnis) > 0:
             for i in dnis:
-                visitante_representante_df = new_visitas[new_visitas['N_Documento_'] == i]
+                visitante_representante_df = new_visitas[new_visitas['N_Documento_'] == str(i)]
                 if len(visitante_representante_df) > 0:
                     proveedor_df = pd.DataFrame(proveedores.iloc[k]).T.copy()
                     proveedor_df.index = [cont]
@@ -223,11 +223,13 @@ if __name__ == '__main__':
     data_after.index = data_after['ruc_'].apply(lambda x:str(x))
     encontrados = visitantes.join(data_after, how = 'outer')
     encontrados.to_csv(os.getcwd() + '/encontrados/visitantes_empresarios.csv')
-    #columnas_drop = ['seace_desCatObj_keys', 'seace_desCatObj_values','seace_desEstContProv_keys',\
-    #                'seace_desEstContProv_values', 'id_visitas', 'Tipo_Documento' ,\
-    #                'N_Documento', 'id_visitas_min']
-    #visitantes_clean = encontrados.drop(columnas_drop, axis = 1)
-    #visitantes.to_csv(os.getcwd() + '/encontrados/para_presentar.csv')
+    columnas_exportar = ['seace_registros', 'ruc', 'Razon_social', 'tipoEmpresa', 'seace_gasto_promedio_mensual',
+    'seace_fecha_min', 'seace_fecha_max', "ganados_despues_visita", "monto_promedio_despues_visita",
+    "n_sanciones", "meses_sancionado", "Visitante", "Tipo_Documento", "N_Documento_", "es_organo", "es_representante",
+    "es_socio", "es_persona_natural", "fechas", "#_Visitas", "Tiempo_reuniones(min)", "primer_dia", "ultimo_dia", 
+    "reunion_sin_tiempo", "#_Visitados", "Visitados", "Cargos", "#_oficinas", "Oficinas", "entidades"]
+    encontrados = encontrados[columnas_exportar]
+    encontrados.to_csv(os.getcwd() + '/producto/visitantes_empresarios.csv')
     t1 = time.time()
     print_time(t1 - t0, 'para obtener visitantes empresarios e info de las empresas.')
     print("********************")

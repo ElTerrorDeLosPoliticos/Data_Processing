@@ -230,9 +230,17 @@ def load_transform_save_data():
         data_complete = pd.concat([data_complete, data_line])
     data_complete.index = list(range(len(data_complete)))
     data_complete.index.name = 'id'
-    print(u"Saving data in {}".format(os.getcwd() + '/proveedores/proveedores_transform.csv'))
-    data_complete.to_csv(os.getcwd() + '/proveedores/proveedores_transform.csv')
-    
+    print(u"Saving data in {}".format(os.getcwd() + '/proveedores/proveedores.csv'))
+    data_complete.to_csv(os.getcwd() + '/proveedores/proveedores.csv')
+    columas_exportar = ['ruc', 'Razon_social', 'tipoEmpresa',
+     'seace_registros', 'seace_gasto_total', 'seace_gasto_promedio_mensual',
+     'seace_fecha_min', 'seace_fecha_max', 'n_sanciones', 'meses_sancionado',
+     'organos_nomb_apell', 'organos_nroDocumento', 'representantes_nomb_apell',
+     'representantes_nroDocumento', 'socios', 'socios_dni']
+    data_complete = data_complete[columas_exportar]
+    print(u"Saving data in {}".format(os.getcwd() + '/producto/proveedores_perfil.csv'))
+    data_complete.to_csv(os.getcwd() + '/producto/proveedores_perfil.csv')
+
 if __name__ == '__main__':
     print("********************         TRANSFORMING PROVEEDORES        ********************\n\n")
     t0 = time.time()

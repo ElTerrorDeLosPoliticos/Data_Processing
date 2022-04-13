@@ -71,13 +71,15 @@ def fechas_func():
     onlyfiles = obtener_files()
     fechas_save = [i[:6] for i in onlyfiles]
     fechas_no_save = list(set(meses_a_completar).difference(set(fechas_save)))
+    fechas_no_save.extend(sorted(meses_a_completar)[-4:])
+    fechas_no_save = list(set(fechas_no_save))
     return sorted(fechas_no_save)
     
 def obtain_data_from_date(item_name, collection_name, entidades):
     daily_monthly = pd.DataFrame()
     list_documentos = list(range(1, 2000))              # Arg4
     key_save = False
-    for ministerio in tqdm(entidades):
+    for ministerio in tqdm(entidades, desc = "Downloading data from firestore"):
         for documento in list_documentos:
             #print(u"Mes: {}, Ministerio: {}, Documento: {}".format(item_name, ministerio, documento), end = "")
             booleano, doc= test_prev_existence(collection_name, item_name, ministerio, str(documento))

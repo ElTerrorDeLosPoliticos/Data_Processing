@@ -153,6 +153,11 @@ def obtain_mean(cargo):
     mean = dict_mean[cargo]
     return mean
 
+def obtain_std(cargo):
+    global dict_std
+    std = dict_std[cargo]
+    return std
+
 def obtener_outlier(salario, threshold):
     if salario >= threshold:
         return 1
@@ -164,6 +169,7 @@ def complete_df_no_data(df):
     df.loc[:,'last cargo'] = df['cargo'].apply(lambda x: last_trabajo(x, type_array))
     df.loc[:,'normalize'] = ['No data']*len(df)
     df.loc[:, 'salario promedio (S/.)'] = ['No data']*len(df)
+    df.loc[:, 'salario std'] = ['No data']*len(df)
     df.loc[:, '3σ_outlier'] = [0]*len(df)
     df.loc[:, '6σ_outlier'] = [0]*len(df)
     return df
@@ -199,6 +205,7 @@ def outlier_detection(df_c):
     df_clean_c = df_clean.copy()
     df_clean_c.loc[:, 'normalize'] = df_clean_c[['last cargo', 'salario mensual promedio (S/.)']].apply(normalizar, axis = 1)
     df_clean_c.loc[:, 'salario promedio (S/.)'] = df_clean_c['last cargo'].apply(lambda x: obtain_mean(x))
+    df_clean_c.loc[:, 'salario std'] = df_clean_c['last cargo'].apply(lambda x: obtain_std(x))
     #df_clean_c.loc[:, 'moderate_outlier'] = df_clean_c['normalize'].apply(lambda x:obtener_outlier(x, 2))
     df_clean_c.loc[:, '3σ_outlier'] = df_clean_c['normalize'].apply(lambda x:obtener_outlier(x, 3))
     df_clean_c.loc[:, '6σ_outlier'] = df_clean_c['normalize'].apply(lambda x:obtener_outlier(x, 6))
@@ -215,23 +222,25 @@ def print_time(seconds, message):
     segundos = seconds - horas*3600 - minutos*60
     print(u"Takes: {} hours, {} minutes, {} seconds {}".format(horas, minutos, segundos, message))
 
-if __name__ == '__main__':
-    print("********************         TRANSFORMING PLANILLA        ********************\n\n")
-    print("Loading..")
-    df_fire_c = obtener_df_de_firestore()
-    print("Transforming...")
-    t0 = time.time()
-    df_fire_transform = transform_whole_data_set(df_fire_c)
-    t1 = time.time()
-    print_time(t1 - t0, "to transformed the data.")
-    print("Outlier Detection...")
-    t2 = time.time()
-    df_fire_transform = outlier_detection(df_fire_transform)
-    outlier_3 = df_fire_transform[df_fire_transform['3σ_outlier'] == True]
-    t3 = time.time()
-    print_time(t3 - t2, "to obtained outliers")
-    print("Saving...")
-    df_fire_transform.to_csv(os.getcwd() + '/planilla_transform/planilla_transform.csv')
-    outlier_3.to_csv(os.getcwd() + '/planilla_transform/outlier_3.csv')
-    print(u"Saved in {}".format(os.getcwd() + '/planilla_transform'))
-    print("********************")
+print("********************         TRANSFORMING PLANILLA        ********************\n\n")
+print("Loading..")
+df_fire_c = obtener_df_de_firestore()
+print("Transforming...")
+t0 = time.time()
+df_fire_transform = transform_whole_data_set(df_fire_c)
+t1 = time.time()
+print_time(t1 - t0, "to transformed the data.")
+print("Outlier Detection...")
+t2 = time.time()
+df_fire_transform = outlier_detection(df_fire_transform)
+outlier_3 = df_fire_transform[df_fire_transform['3σ_outlier'] == True]
+t3 = time.time()
+print_time(t3 - t2, "to obtained outliers")
+print("Saving...")
+df_fire_transform.to_csv(os.getcwd() + '/planilla_transform/planilla_transform.csv')
+df_fire_transform.drop(["total recibido (S/.)", "atraso pago promedio(meses)", "last cargo",
+    "normalize"], axis = 1, inplace = True)
+df_fire_transform.to_csv(os.getcwd() + '/producto/planilla_perfil.csv')
+outlier_3.to_csv(os.getcwd() + '/planilla_transform/outlier_3.csv')
+print(u"Saved in {}".format(os.getcwd() + '/planilla_transform'))
+print("********************")

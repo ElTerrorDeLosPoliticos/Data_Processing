@@ -29,7 +29,7 @@ def obtener_df_de_firestore():
 
 def obtener_files():
     directorio = os.getcwd()
-    directorio_files = directorio + '/visitas_mensuales'
+    directorio_files = directorio + '/visitas_ministerios_mensual'
     onlyfiles = [f for f in listdir(directorio_files) if (isfile(join(directorio_files, f))) and (f[-4:] == ".csv" ) ]
     return onlyfiles
 
@@ -103,6 +103,8 @@ def transform_visitantes(df_c):
     #visitados.columns = ['Visitados']
     tipo_documento = pd.pivot_table(df, values = 'Tipo_Documento', index= ['id'], aggfunc= lambda x: x.unique())
     documento = pd.pivot_table(df, values = 'N_Documento', index= ['id'], aggfunc= lambda x: x.unique())
+    #n_cargos = pd.pivot_table(df , values = 'Cargo', index = ['id'], aggfunc = lambda x: len(x.unique()))
+    #n_cargos.columns = ['#_cargos']
     cargos = pd.pivot_table(df , values = 'Cargo', index = ['id'], aggfunc = lambda x: x.unique())
     cargos.columns = ['Cargos']
     n_oficinas = pd.pivot_table(df , values = 'Oficina', index = ['id'], aggfunc = lambda x: len(x.unique()))
@@ -265,12 +267,12 @@ if __name__ == '__main__':
     df_transform_visitados = transform_visitados(df)
     t1 = time.time()
     print_time(t1 - t0, "to transformed the data.")
-    print("Outliers...")
-    t2 = time.time()
-    df_transform_visitantes = outlier_detection(df_transform_visitantes, tipo = 'visitante', nombre = 'visitante_dbscan_plot', min_samples=50)
-    df_transform_visitados = outlier_detection(df_transform_visitados, tipo = 'visitado', nombre = 'visitado_dbscan_plot')
-    t3 = time.time()
-    print_time(t3-t2, "to obtain the outliers.")
+    #print("Outliers...")
+    #t2 = time.time()
+    #df_transform_visitantes = outlier_detection(df_transform_visitantes, tipo = 'visitante', nombre = 'visitante_dbscan_plot', min_samples=50)
+    #df_transform_visitados = outlier_detection(df_transform_visitados, tipo = 'visitado', nombre = 'visitado_dbscan_plot')
+    #t3 = time.time()
+    #print_time(t3-t2, "to obtain the outliers.")
     print("Saving...")
     df_transform_visitantes.to_csv(os.getcwd() + '/visitas_ministerios_transform/visitantes_transformed.csv')
     df_transform_visitados.to_csv(os.getcwd() + '/visitas_ministerios_transform/visitados_transformed.csv')

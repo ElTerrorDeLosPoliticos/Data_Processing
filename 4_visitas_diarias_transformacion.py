@@ -19,6 +19,7 @@ def obtener_df_de_firestore():
         mensual_df = pd.read_csv(os.getcwd() + '/visitas_mensuales/' + i, low_memory = False)
         if len(mensual_df) > 0:
             df_firestore = pd.concat([df_firestore, mensual_df])
+    print(u"DNI Nulos {}:".format(df_firestore['N_Documento'].isnull().sum()))
     df_firestore.drop(['Unnamed: 0'], axis = 1, inplace= True)
     df_firestore.dropna(subset=['Visitante'], inplace= True)
     df_firestore.index = list(range(len(df_firestore)))
@@ -75,6 +76,8 @@ def transform_visitantes(df_c):
     df.loc[df['Visitante'] =='castillo sologuren jorge',('Visitante')] = 'castillo sologuren jorge alberto'
     df.loc[df['Visitante'] =='surco hachiri benardino julio',('Visitante')] = 'surco hachiri bernardino julio'    
     df.loc[df['Visitante'] =='martinez moron alain cesar',('Visitante')] = 'martinez moron alan cesar'  
+    df.loc[df['Visitante'] =='salas montel magno',('Visitante')] = 'salas montiel magno alberto'  
+
     unique_personal = df['Visitante'].unique()
     personal_map = {u: i for i, u in enumerate(unique_personal)}
     df['id'] = df['Visitante'].map(personal_map)
@@ -102,13 +105,15 @@ def transform_visitantes(df_c):
     min_dia.columns = ['primer_dia']
     max_dia = pd.pivot_table(df, values = 'fecha', index = ['id'], aggfunc= np.max)
     max_dia.columns = ['ultimo_dia']
+    n_entidad = pd.pivot_table(df , values = 'entidad', index = ['id'], aggfunc = lambda x: len(x.unique()))
+    n_entidad.columns = ['n_entidades']
     reunion_sin_tiempo = pd.pivot_table(df, values = 'reunion_sin_tiempo', index= ['id'], aggfunc= np.sum)
     entidades = pd.pivot_table(df, values = 'entidad', index = ['id'], aggfunc= lambda x: x.unique())
     entidades.columns = ['entidades']
     new_df = df[['id','Visitante']].copy()
     new_df.index = new_df['id']
     new_df.drop_duplicates(inplace= True)
-    to_df = pd.concat([new_df, fechas, recurrencia,tiempo_total, min_dia, max_dia, reunion_sin_tiempo, n_visitados, visitados, tipo_documento, documento, cargos, n_oficinas, oficinas, entidades], axis = 1)
+    to_df = pd.concat([new_df, fechas, recurrencia,tiempo_total, min_dia, max_dia, reunion_sin_tiempo, n_visitados, visitados, tipo_documento, documento, cargos, n_oficinas, oficinas, entidades, n_entidad], axis = 1)
     to_df.drop(['id'], axis = 1, inplace = True)
     to_df['tiempo_reunion/n_fechas (h)'] = to_df['Tiempo_reuniones(min)']/to_df['fechas']/60.0
     to_df['tiempo_reunion/n_fechas (h)'] = to_df['tiempo_reunion/n_fechas (h)'].apply(lambda x : round(x, 2))
@@ -149,13 +154,15 @@ def transform_visitados(df_c):
     min_dia.columns = ['primer_dia']
     max_dia = pd.pivot_table(df, values = 'fecha', index = ['id'], aggfunc= np.max)
     max_dia.columns = ['ultimo_dia']
+    n_entidad = pd.pivot_table(df , values = 'entidad', index = ['id'], aggfunc = lambda x: len(x.unique()))
+    n_entidad.columns = ['n_entidades']
     reunion_sin_tiempo = pd.pivot_table(df, values = 'reunion_sin_tiempo', index= ['id'], aggfunc= np.sum)
     entidades = pd.pivot_table(df, values = 'entidad', index = ['id'], aggfunc= lambda x: x.unique())
     entidades.columns = ['entidades']
     new_df = df[['id','Visitado']].copy()
     new_df.index = new_df['id']
     new_df.drop_duplicates(inplace= True)
-    to_df = pd.concat([new_df, fechas, recurrencia,tiempo_total, min_dia, max_dia, reunion_sin_tiempo, n_visitados, cargos, n_oficinas, oficinas, entidades], axis = 1)
+    to_df = pd.concat([new_df, fechas, recurrencia,tiempo_total, min_dia, max_dia, reunion_sin_tiempo, n_visitados, cargos, n_oficinas, oficinas, entidades, n_entidad], axis = 1)
     to_df.drop(['id'], axis = 1, inplace = True)
     to_df['tiempo_reunion/n_fechas (h)'] = to_df['Tiempo_reuniones(min)']/to_df['fechas']/60.0
     to_df['tiempo_reunion/n_fechas (h)'] = to_df['tiempo_reunion/n_fechas (h)'].apply(lambda x : round(x, 2))
@@ -250,12 +257,12 @@ if __name__ == '__main__':
     df_transform_visitados = transform_visitados(df)
     t1 = time.time()
     print_time(t1 - t0, "to transformed the data.")
-    print("Outliers...")
-    t2 = time.time()
-    df_transform_visitantes = outlier_detection(df_transform_visitantes, tipo = 'visitante', nombre = 'visitante_dbscan_plot', min_samples=150)
-    df_transform_visitados = outlier_detection(df_transform_visitados, tipo = 'visitado', nombre = 'visitado_dbscan_plot')
-    t3 = time.time()
-    print_time(t3-t2, "to obtain the outliers.")
+    #print("Outliers...")
+    #t2 = time.time()
+    #df_transform_visitantes = outlier_detection(df_transform_visitantes, tipo = 'visitante', nombre = 'visitante_dbscan_plot', min_samples=150)
+    #df_transform_visitados = outlier_detection(df_transform_visitados, tipo = 'visitado', nombre = 'visitado_dbscan_plot')
+    #t3 = time.time()
+    #print_time(t3-t2, "to obtain the outliers.")
     print("Saving...")
     df_transform_visitantes.to_csv(os.getcwd() + '/visitas_transform/visitantes_transformed.csv')
     df_transform_visitados.to_csv(os.getcwd() + '/visitas_transform/visitados_transformed.csv')
