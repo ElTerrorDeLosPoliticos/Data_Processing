@@ -8,6 +8,10 @@ import re
 import string
 import time 
 
+global fechas_contrato
+with open('contratos_fechas.json', 'r', encoding='utf-8') as f:
+    fechas_contrato = json.load(f, encoding='utf-8')
+
 def get_fecha(x, s = '-'):
     if (x != None) or (x!=''):
         #print(datetime.strptime(x[:10], '%Y-%m-%d').date())
@@ -33,6 +37,16 @@ def obtain_months_past(x):
 
 def get_numb(x):
     return re.findall(r'\d+', x)[0]
+
+def get_fecha_contrato(texto):
+    global fechas_contrato
+    try:
+        n_contrato = re.findall(r'\d+',texto)[-1]
+        fecha = fechas_contrato[n_contrato]
+        fecha = datetime.strptime(fecha, '%Y-%m-%d %H:%M:%S').date()
+        return fecha
+    except:
+        return None
 
 def clean_text(text):
     tildes = ['á', 'é', 'í', 'ó', 'ú']
@@ -79,7 +93,7 @@ def get_data_from_experiencia_rnp(item, data):
 def get_data_from_experiencia_seace(item, data):
     df_values = pd.DataFrame(item['experiencia_seace'])
     if len(df_values) > 0:
-        df_values['fecha'] = df_values['fecProgTerm'].apply(lambda x: get_fecha(x))
+        df_values['fecha'] = df_values['codContProv'].apply(lambda x: get_fecha_contrato(x))
         fecha_min = df_values['fecha'].apply(pd.to_datetime).min().date()
         if fecha_min > date.today():
             fecha_min = date.today()
@@ -98,6 +112,7 @@ def get_data_from_experiencia_seace(item, data):
         data['seace_fecha_min'] = fecha_min
         data['seace_fecha_max'] = fecha_max
         data['seace_meses_activo'] = meses_activo
+        data['registros_antes_2018'] = df_values['fecha'].isnull().sum()
     else:
         data['seace_registros'] = None
         data['seace_gasto_total'] = None
@@ -233,7 +248,7 @@ def load_transform_save_data():
     print(u"Saving data in {}".format(os.getcwd() + '/proveedores/proveedores.csv'))
     data_complete.to_csv(os.getcwd() + '/proveedores/proveedores.csv')
     columas_exportar = ['ruc', 'Razon_social', 'tipoEmpresa',
-     'seace_registros', 'seace_gasto_total', 'seace_gasto_promedio_mensual',
+     'seace_registros','registros_antes_2018', 'seace_gasto_total', 'seace_gasto_promedio_mensual',
      'seace_fecha_min', 'seace_fecha_max', 'n_sanciones', 'meses_sancionado',
      'organos_nomb_apell', 'organos_nroDocumento', 'representantes_nomb_apell',
      'representantes_nroDocumento', 'socios', 'socios_dni']
